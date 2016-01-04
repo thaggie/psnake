@@ -109,5 +109,6 @@ while 1:
     if gs.score > maxscore:
         maxscore = gs.score
     
-    stdscr.addstr(maxy-1, 1, "Score: {0} High: {1}".format(gs.score, maxscore), curses.A_REVERSE)
+    stdscr.addstr(0, 1, "High Score: {0}".format(maxscore), curses.A_REVERSE)
+    stdscr.addstr(maxy-1, 1, "Score: {0}".format(gs.score), curses.A_REVERSE)
     curses.napms(200)
