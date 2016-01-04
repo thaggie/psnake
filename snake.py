@@ -50,8 +50,8 @@ class GameState:
         self.score = 0
         self.nextTarget()
     def nextTarget(self):
-        self.ax = random.randint(1, (maxx-1)/2) * 2
-        self.ay = random.randint(1, maxy-1)
+        self.ax = random.randint(0, (maxx-2) / 2) * 2 + 1
+        self.ay = random.randint(0, maxy-2) + 1
         stdscr.addstr(self.ay, self.ax, "*")
     def within(self):
         for i in range(0, len(self.xs)):
