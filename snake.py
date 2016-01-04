@@ -25,6 +25,7 @@ stdscr.nodelay(1)
 maxscore = 0
 maxy, maxx = stdscr.getmaxyx()
 
+
 def drawBorder():
     for x in range(0, maxx-1):
     	stdscr.addstr(0, x, " ", curses.A_REVERSE)
@@ -44,25 +45,31 @@ class GameState:
         self.dx = 2
         self.dy = 0
         self.x = maxx / 2
+        if (self.x % 2 == 0):
+            self.x = self.x + 1
+
         self.y = maxy / 2
         self.xs = deque([self.x, self.x, self.x, self.x])
         self.ys = deque([self.y, self.y, self.y, self.y])
         self.score = 0
         self.nextTarget()
     def nextTarget(self):
-        self.ax = random.randint(0, (maxx-2) / 2) * 2 + 1
-        self.ay = random.randint(0, maxy-2) + 1
+        good = 0
+        while not good:
+            self.ax = random.randint(0, (maxx-2) / 2) * 2 + 1
+            self.ay = random.randint(0, maxy-3) + 1
+            good = not self.within(self.ax, self.ay)
         stdscr.addstr(self.ay, self.ax, "*")
-    def within(self):
+    def within(self, x, y):
         for i in range(0, len(self.xs)):
-            if self.x == self.xs[i] and self.y == self.ys[i]:
+            if x == self.xs[i] and y == self.ys[i]:
                 return 1
         return 0
     def next(self):
         self.x = self.x + self.dx
         self.y = self.y + self.dy
 
-        if self.within() or self.x == 0 or self.y == 0 or self.x >= maxx-1 or self.y >= maxy-1:
+        if self.within(self.x, self.y) or self.x == 0 or self.y == 0 or self.x >= maxx-1 or self.y >= maxy-1:
             curses.flash()
             gs.reset()
         else:
@@ -102,5 +109,5 @@ while 1:
     if gs.score > maxscore:
         maxscore = gs.score
     
-    stdscr.addstr(maxy-1, 1, "Score: {0} Max: {1}".format(gs.score, maxscore), curses.A_REVERSE)
+    stdscr.addstr(maxy-1, 1, "Score: {0} High: {1}".format(gs.score, maxscore), curses.A_REVERSE)
     curses.napms(200)
